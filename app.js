@@ -1,14 +1,14 @@
-const express = require("express");
-const logger = require("morgan");
-const cors = require("cors");
+import express from "express";
+import logger from "morgan";
+import cors from "cors";
 
-const contactsRouter = require("./routes/api/contacts");
+import contactsRouter from "./routes/api/contacts.js";
 
 const app = express();
-
+console.log("Hi");
 // view engine setup
-app.set("views", path.join(__dirname, "views"));
-app.set("view engine", "ejs");
+// app.set("views", path.join(__dirname, "views"));
+// app.set("view engine", "ejs");
 
 const formatsLogger = app.get("env") === "development" ? "dev" : "short";
 
@@ -18,10 +18,10 @@ app.use(express.json());
 
 // підключення проміжного ПЗ
 app.use(express.urlencoded({ extended: false }));
-app.use(cookieParser());
+// app.use(cookieParser());
 
 //обробка статичних ресурсів
-app.use(express.static(path.join(__dirname, "public")));
+// app.use(express.static(path.join(__dirname, "public")));
 
 app.use("/api/contacts", contactsRouter);
 
@@ -38,4 +38,4 @@ app.use((err, req, res, next) => {
   res.status(500).json({ message: err.message });
 });
 
-module.exports = app;
+export default app;
