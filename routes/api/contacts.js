@@ -46,8 +46,9 @@ router.post("/", async (req, res, next) => {
     if (error) {
       const errorPath = error.details[0].context.label;
       const errorMessage = `missing required ${errorPath} field`;
-      throw HttpError(400, error.message);
+      throw HttpError(400, errorMessage);
     }
+
     const result = await addContact(req.body);
     res.status(201).json(result);
   } catch (error) {
@@ -59,6 +60,7 @@ router.delete("/:id", async (req, res, next) => {
   try {
     const { id } = req.params;
     const result = await removeContact(id);
+
     if (!result) {
       throw HttpError(404, "Not found");
     }
@@ -70,7 +72,6 @@ router.delete("/:id", async (req, res, next) => {
 
 router.put("/:id", async (req, res, next) => {
   try {
-    console.log(req.body);
     if (Object.keys(req.body).length === 0) {
       res.status(400).json({ message: "missing fields" });
       return;
@@ -85,6 +86,7 @@ router.put("/:id", async (req, res, next) => {
     if (!result) {
       throw HttpError(404, "Not found");
     }
+
     res.json(result);
   } catch (error) {
     next(error);
