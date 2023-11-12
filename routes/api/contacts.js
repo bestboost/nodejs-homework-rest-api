@@ -42,10 +42,11 @@ router.get("/:id", async (req, res, next) => {
 router.post("/", async (req, res, next) => {
   try {
     const { error } = addSchema.validate(req.body);
-    const errorPath = error.details[0].context.label;
-    const errorMessage = `missing required ${errorPath} field`;
+
     if (error) {
-      throw HttpError(400, errorMessage);
+      const errorPath = error.details[0].context.label;
+      const errorMessage = `missing required ${errorPath} field`;
+      throw HttpError(400, error.message);
     }
     const result = await addContact(req.body);
     res.status(201).json(result);
