@@ -69,6 +69,10 @@ router.delete("/:id", async (req, res, next) => {
 
 router.put("/:id", async (req, res, next) => {
   try {
+    if ((req.body = {})) {
+      res.status(400).json({ message: "missing fields" });
+      return;
+    }
     const { error } = addSchema.validate(req.body);
     if (error) {
       throw HttpError(400, error.message);
