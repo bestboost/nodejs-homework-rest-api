@@ -1,5 +1,16 @@
+import mongoose from "mongoose";
+// TzsGIRF1cyfW9cRD
+
 import app from "./app.js";
 
-app.listen(3000, () => {
-  console.log("Server running. Use our API on port: 3000");
-});
+const DB_CONTACTS =
+  "mongodb+srv://Darya:TzsGIRF1cyfW9cRD@cluster0.llnpj3k.mongodb.net/db-contacts?retryWrites=true&w=majority";
+mongoose
+  .connect(DB_CONTACTS)
+  .then(() => {
+    app.listen(3000);
+  })
+  .catch((error) => {
+    console.log(error.message);
+    process.exit(1);
+  });

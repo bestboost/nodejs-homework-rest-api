@@ -78,7 +78,9 @@ router.put("/:id", async (req, res, next) => {
     }
     const { error } = addSchema.validate(req.body);
     if (error) {
-      throw HttpError(400, error.message);
+      const errorPath = error.details[0].context.label;
+      const errorMessage = `missing required ${errorPath} field`;
+      throw HttpError(400, errorMessage);
     }
     const { id } = req.params;
     const result = await updateContact(id, req.body);
