@@ -1,20 +1,15 @@
 import express from "express";
-import Joi from "joi";
 import {
   listContacts,
   // getById,
-  // addContact,
+  addContact,
   // removeContact,
   // updateContact,
 } from "../../controllers/contacts.js";
 import { HttpError } from "../../helpers/HttpError.js";
+import { addSchema } from "../../models/contact.js";
 
 const router = express.Router();
-const addSchema = Joi.object({
-  name: Joi.string().required(),
-  email: Joi.string().required(),
-  phone: Joi.string().required(),
-});
 
 router.get("/", async (req, res, next) => {
   try {
@@ -39,22 +34,22 @@ router.get("/", async (req, res, next) => {
 //   }
 // });
 
-// router.post("/", async (req, res, next) => {
-//   try {
-//     const { error } = addSchema.validate(req.body);
+router.post("/", async (req, res, next) => {
+  try {
+    const { error } = addSchema.validate(req.body);
 
-//     if (error) {
-//       const errorPath = error.details[0].context.label;
-//       const errorMessage = `missing required ${errorPath} field`;
-//       throw HttpError(400, errorMessage);
-//     }
+    if (error) {
+      const errorPath = error.details[0].context.label;
+      const errorMessage = `missing required ${errorPath} field`;
+      throw HttpError(400, errorMessage);
+    }
 
-//     const result = await addContact(req.body);
-//     res.status(201).json(result);
-//   } catch (error) {
-//     next(error);
-//   }
-// });
+    const result = await addContact(req.body);
+    res.status(201).json(result);
+  } catch (error) {
+    next(error);
+  }
+});
 
 // router.delete("/:id", async (req, res, next) => {
 //   try {

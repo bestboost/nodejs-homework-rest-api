@@ -1,4 +1,3 @@
-import { nanoid } from "nanoid";
 import { Contact } from "../models/contact.js";
 
 export const listContacts = async (req, res) => {
@@ -12,16 +11,10 @@ export const listContacts = async (req, res) => {
 //   return result || null;
 // };
 
-// export const addContact = async (body) => {
-//   const contacts = await listContacts();
-//   const newContact = {
-//     id: nanoid(),
-//     ...body,
-//   };
-//   contacts.push(newContact);
-//   await fs.writeFile(contactsPath, JSON.stringify(contacts, null, 2));
-//   return newContact;
-// };
+export const addContact = async (body) => {
+  const result = await Contact.create(body);
+  return result;
+};
 
 // export const removeContact = async (id) => {
 //   const contacts = await listContacts();
