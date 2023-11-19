@@ -8,7 +8,7 @@ import {
 } from "../../controllers/contacts.js";
 import { HttpError } from "../../helpers/HttpError.js";
 import { addSchema, contactFavoriteSchema } from "../../models/contact.js";
-import { isValidId } from "../../middleweares/isValidId.js";
+import isValidId from "../../middleweares/isValidId.js";
 
 const router = express.Router();
 
@@ -91,13 +91,14 @@ router.put("/:id", isValidId, async (req, res, next) => {
   }
 });
 
-router.patch(":/id/favorite", isValidId, async (req, res, next) => {
+router.patch("/:id/favorite", isValidId, async (req, res, next) => {
   try {
     if (Object.keys(req.body).length === 0) {
       res.status(400).json({ message: "missing fields" });
       return;
     }
     const { error } = contactFavoriteSchema.validate(req.body);
+
     if (error) {
       const errorPath = error.details[0].context.label;
       const errorMessage = `missing required ${errorPath} field`;
