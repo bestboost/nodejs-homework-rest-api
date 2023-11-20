@@ -94,7 +94,7 @@ router.put("/:id", isValidId, async (req, res, next) => {
 router.patch("/:id/favorite", isValidId, async (req, res, next) => {
   try {
     if (Object.keys(req.body).length === 0) {
-      res.status(400).json({ message: "missing fields" });
+      res.status(400).json({ message: "missing field favorite" });
       return;
     }
     const { error } = contactFavoriteSchema.validate(req.body);
