@@ -1,26 +1,59 @@
-import { Contact } from "../models/contact.js";
+import { Contact } from "../models/contact-schema.js";
+import { HttpError } from "../helpers/HttpError.js";
+import ctrlWrapper from "../decorators/ctrlWrapper.js";
 
-export const listContacts = async (req, res) => {
-  const data = await Contact.find();
-  return data;
+const listContacts = async (req, res) => {
+  const result = await Contact.find();
+  res.json(result);
 };
 
-export const getById = async (id) => {
-  const result = Contact.findById(id);
-  return result || null;
+const getById = async (req, res) => {
+  const { id } = req.params;
+  const result = await Contact.findById(id);
+
+  if (!result) {
+    throw HttpError(404, "Not found");
+  }
+  res.json(result);
 };
 
-export const addContact = async (body) => {
-  const result = await Contact.create(body);
-  return result;
+const addContact = async (req, res) => {
+  const result = await Contact.create(req.body);
+  res.status(201).json(result);
 };
 
-export const removeContact = async (id) => {
-  const result = Contact.findByIdAndDelete(id);
-  return result;
+const removeContact = async (req, res) => {
+  const { id } = req.params;
+  const result = await Contact.findByIdAndDelete(id);
+
+  if (!result) {
+    throw HttpError(404, "Not found");
+  }
+  res.status(200).json({ message: "contact deleted" });
 };
 
-export const updateContact = async (id, body) => {
-  const result = Contact.findByIdAndUpdate(id, body);
-  return result;
+const updateContact = async (req, res) => {
+  const { id } = req.params;
+  const result = await Contact.findByIdAndUpdate(id, req.body);
+
+  if (!result) {
+    throw HttpError(404, "Not found");
+  }
+
+  res.json(result);
+};
+
+const updateFavorite = async (req, res) => {
+  const { id } = req.params;
+  const result = await Contact.findByIdAndUpdate(id, req.body);
+  res.json(result);
+};
+
+export default {
+  listContacts: ctrlWrapper(listContacts),
+  getById: ctrlWrapper(getById),
+  addContact: ctrlWrapper(addContact),
+  removeContact: ctrlWrapper(removeContact),
+  updateContact: ctrlWrapper(updateContact),
+  updateFavorite: ctrlWrapper(updateFavorite),
 };
