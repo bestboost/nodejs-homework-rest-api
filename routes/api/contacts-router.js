@@ -1,12 +1,9 @@
 import express from "express";
-import ctrl from "../../controllers/contacts.js";
+import ctrl from "../../controllers/contacts-controller.js";
 import isValidId from "../../middleweares/isValidId.js";
 import isEmptyBody from "../../middleweares/isEmptyBody.js";
 import validateBody from "../../decorators/validaterBody.js";
-import {
-  addSchema,
-  contactFavoriteSchema,
-} from "../../models/contact-schema.js";
+import { addSchema, contactFavoriteSchema } from "../../models/Contact.js";
 
 const router = express.Router();
 
