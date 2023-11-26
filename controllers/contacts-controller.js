@@ -3,13 +3,15 @@ import { HttpError } from "../helpers/HttpError.js";
 import ctrlWrapper from "../decorators/ctrlWrapper.js";
 
 const listContacts = async (req, res) => {
-  const result = await Contact.find();
+  const { _id: owner } = req.user;
+  const result = await Contact.find({ owner });
   res.json(result);
 };
 
 const getById = async (req, res) => {
   const { id } = req.params;
-  const result = await Contact.findById(id);
+  const { _id: owner } = req.user;
+  const result = await Contact.findOne({ _id: id, owner });
 
   if (!result) {
     throw HttpError(404, "Not found");
@@ -18,13 +20,16 @@ const getById = async (req, res) => {
 };
 
 const addContact = async (req, res) => {
-  const result = await Contact.create(req.body);
+  const { _id: owner } = req.user;
+  console.log("addContact  _id: owner:", req.user);
+  const result = await Contact.create({ ...req.body, owner });
   res.status(201).json(result);
 };
 
 const removeContact = async (req, res) => {
   const { id } = req.params;
-  const result = await Contact.findByIdAndDelete(id);
+  const { _id: owner } = req.user;
+  const result = await Contact.findOneAndDelete({ _id: id, owner });
 
   if (!result) {
     throw HttpError(404, "Not found");
@@ -34,7 +39,8 @@ const removeContact = async (req, res) => {
 
 const updateContact = async (req, res) => {
   const { id } = req.params;
-  const result = await Contact.findByIdAndUpdate(id, req.body);
+  const { _id: owner } = req.user;
+  const result = await Contact.findOneAndUpdate({ _id: id, owner }, req.body);
 
   if (!result) {
     throw HttpError(404, "Not found");
@@ -45,7 +51,8 @@ const updateContact = async (req, res) => {
 
 const updateFavorite = async (req, res) => {
   const { id } = req.params;
-  const result = await Contact.findByIdAndUpdate(id, req.body);
+  const { _id: owner } = req.user;
+  const result = await Contact.findOneAndUpdate({ _id: id, owner }, req.body);
   res.json(result);
 };
 

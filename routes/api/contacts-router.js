@@ -20,7 +20,7 @@ contactRouter.delete("/:id", isValidId, ctrl.removeContact);
 
 contactRouter.put(
   "/:id",
-  isEmptyBody,
+  // isEmptyBody,
   isValidId,
   ctrl.updateContact,
   validateBody(addSchema)
@@ -28,7 +28,7 @@ contactRouter.put(
 
 contactRouter.patch(
   "/:id/favorite",
-  isEmptyBody,
+  // isEmptyBody,
   isValidId,
   ctrl.updateFavorite,
   validateBody(contactFavoriteSchema)
