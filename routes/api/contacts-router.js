@@ -2,20 +2,23 @@ import express from "express";
 import ctrl from "../../controllers/contacts-controller.js";
 import isValidId from "../../middleweares/isValidId.js";
 import isEmptyBody from "../../middleweares/isEmptyBody.js";
+import authenticate from "../../middleweares/authenticate.js";
 import validateBody from "../../decorators/validaterBody.js";
 import { addSchema, contactFavoriteSchema } from "../../models/Contact.js";
 
-const router = express.Router();
+const contactRouter = express.Router();
 
-router.get("/", ctrl.listContacts);
+contactRouter.use(authenticate);
 
-router.get("/:id", isValidId, ctrl.getById);
+contactRouter.get("/", ctrl.listContacts);
 
-router.post("/", ctrl.addContact, validateBody(addSchema));
+contactRouter.get("/:id", isValidId, ctrl.getById);
 
-router.delete("/:id", isValidId, ctrl.removeContact);
+contactRouter.post("/", ctrl.addContact, validateBody(addSchema));
 
-router.put(
+contactRouter.delete("/:id", isValidId, ctrl.removeContact);
+
+contactRouter.put(
   "/:id",
   isEmptyBody,
   isValidId,
@@ -23,7 +26,7 @@ router.put(
   validateBody(addSchema)
 );
 
-router.patch(
+contactRouter.patch(
   "/:id/favorite",
   isEmptyBody,
   isValidId,
@@ -31,4 +34,4 @@ router.patch(
   validateBody(contactFavoriteSchema)
 );
 
-export default router;
+export default contactRouter;
