@@ -1,7 +1,12 @@
 import bcrypt from "bcrypt";
+import jwt from "jsonwebtoken";
+import dotenv from "dotenv";
 import User from "../models/User.js";
 import { HttpError } from "../helpers/HttpError.js";
 import ctrlWrapper from "../decorators/ctrlWrapper.js";
+
+dotenv.config();
+const { JWT_SECRET } = process.env;
 
 const register = async (req, res) => {
   const { email, password } = req.body;
@@ -11,7 +16,6 @@ const register = async (req, res) => {
   }
 
   const hashPassword = await bcrypt.hash(password, 10);
-  console.log("register  hashPassword:", hashPassword);
 
   const newUser = await User.create({ ...req.body, password: hashPassword });
 
@@ -20,19 +24,30 @@ const register = async (req, res) => {
   });
 };
 
-// const login = async (req, res) => {
-//   const { email, password } = req.body;
-//   const user = await User.findOne({ email });
-//   if (!user) {
-//     throw HttpError(401, "Email or password is wrong");
-//   }
-//   const passwordCompare = await bcrypt.compare(password, user.password);
-//   if (!passwordCompare) {
-//     throw HttpError(401, "Email or password is wrong");
-//   }
-// };
+const login = async (req, res) => {
+  const { email, password } = req.body;
+
+  const user = await User.findOne({ email });
+  if (!user) {
+    throw HttpError(401, "Email or password is wrong");
+  }
+
+  const passwordCompare = await bcrypt.compare(password, user.password);
+  if (!passwordCompare) {
+    throw HttpError(401, "Email or password is wrong");
+  }
+  const payload = {
+    id: user._id,
+  };
+
+  const token = jwt.sign(payload, JWT_SECRET, { expiresIn: "23h" });
+
+  res.json({
+    token,
+  });
+};
 
 export default {
   register: ctrlWrapper(register),
-  // login: ctrlWrapper(login),
+  login: ctrlWrapper(login),
 };

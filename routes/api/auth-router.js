@@ -8,16 +8,16 @@ const authRouter = express.Router();
 
 authRouter.post(
   "/users/register",
-  isEmptyBody,
+  // isEmptyBody,
   validateBody(userSignupSchema),
   authController.register
 );
 
-// authRouter.post(
-//   "/users/login",
-//   isEmptyBody,
-//   validateBody(userSigninSchema),
-//   authController.login
-// );
+authRouter.post(
+  "/users/login",
+  // isEmptyBody,
+  validateBody(userSigninSchema),
+  authController.login
+);
 
 export default authRouter;
