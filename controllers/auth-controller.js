@@ -26,7 +26,8 @@ const register = async (req, res) => {
 };
 
 const login = async (req, res) => {
-  const { email, password } = req.body;
+  const { email, password, subscription } = req.body;
+  console.log("login  req.body:", req.body);
 
   const user = await User.findOne({ email });
   if (!user) {
@@ -43,8 +44,13 @@ const login = async (req, res) => {
 
   const token = jwt.sign(payload, JWT_SECRET, { expiresIn: "23h" });
   await User.findByIdAndUpdate(user._id, { token });
-  res.json({
+
+  res.status(201).json({
     token,
+    user: {
+      email: user.email,
+      subscription: user.subscription,
+    },
   });
 };
 

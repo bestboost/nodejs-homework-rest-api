@@ -5,6 +5,7 @@ const isEmptyBody = async (req, res, next) => {
   if (!keys.length) {
     return next(HttpError(400, "missing fields"));
   }
+  next();
 };
 
 export default isEmptyBody;

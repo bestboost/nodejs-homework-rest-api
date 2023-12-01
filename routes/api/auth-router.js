@@ -9,14 +9,14 @@ const authRouter = express.Router();
 
 authRouter.post(
   "/users/register",
-  // isEmptyBody,
+  isEmptyBody,
   validateBody(userSignupSchema),
   authController.register
 );
 
 authRouter.post(
   "/users/login",
-  // isEmptyBody,
+  isEmptyBody,
   validateBody(userSigninSchema),
   authController.login
 );
