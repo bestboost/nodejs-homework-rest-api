@@ -10,7 +10,7 @@ const { JWT_SECRET } = process.env;
 const authenticate = async (req, res, next) => {
   const { authorization } = req.headers;
   if (!authorization) {
-    throw HttpError(401, "Authorization header not found");
+    throw HttpError(401, "Not authorized");
   }
   const [bearer, token] = authorization.split(" ");
   if (bearer !== "Bearer") {
@@ -20,7 +20,7 @@ const authenticate = async (req, res, next) => {
     const { id } = jwt.verify(token, JWT_SECRET);
     const user = await User.findById(id);
     if (!user || !user.token || user.token !== token) {
-      throw HttpError(401, "user not found");
+      throw HttpError(401, "Not authorized");
     }
     req.user = user;
 
