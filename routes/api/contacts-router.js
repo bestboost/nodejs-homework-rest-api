@@ -8,7 +8,7 @@ import { addSchema, contactFavoriteSchema } from "../../models/Contact.js";
 
 const contactRouter = express.Router();
 
-// contactRouter.use(authenticate);
+contactRouter.use(authenticate);
 
 contactRouter.get("/", ctrl.listContacts);
 

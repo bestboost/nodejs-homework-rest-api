@@ -18,7 +18,7 @@ app.use(express.json());
 
 app.use(express.urlencoded({ extended: false }));
 
-app.use("/api/auth", authRouter);
+app.use("/", authRouter);
 app.use("/api/contacts", contactsRouter);
 
 app.use((req, res) => {

@@ -26,7 +26,7 @@ const authenticate = async (req, res, next) => {
 
     next();
   } catch (error) {
-    throw HttpError(401, error.message);
+    throw HttpError(401, "Not authorized");
   }
 };
 
