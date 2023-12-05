@@ -1,6 +1,7 @@
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
+import gravatar from "gravatar";
 import User from "../models/User.js";
 import { HttpError } from "../helpers/HttpError.js";
 import ctrlWrapper from "../decorators/ctrlWrapper.js";
