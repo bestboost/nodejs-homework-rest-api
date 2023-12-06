@@ -58,6 +58,7 @@ const login = async (req, res) => {
     user: {
       email: user.email,
       subscription: user.subscription,
+      avatarURL: user.avatarURL,
     },
   });
 };
@@ -66,7 +67,11 @@ const getCurrent = async (req, res) => {
   const { email } = req.user;
   const user = await User.findOne({ email });
 
-  res.json({ email: user.email, subscription: user.subscription });
+  res.json({
+    email: user.email,
+    subscription: user.subscription,
+    avatarURL: user.avatarURL,
+  });
 };
 
 const logout = async (req, res) => {
@@ -76,9 +81,19 @@ const logout = async (req, res) => {
   res.status(204).json();
 };
 
+const avatar = async (req, res) => {
+  const { email } = req.user;
+  const user = await User.findOne({ email });
+  if (!user) {
+    throw HttpError(401, "Not authorized");
+  }
+  res.status(200).json({ avatarURL: user.avatarURL });
+};
+
 export default {
   register: ctrlWrapper(register),
   login: ctrlWrapper(login),
   getCurrent: ctrlWrapper(getCurrent),
   logout: ctrlWrapper(logout),
+  avatar: ctrlWrapper(avatar),
 };
