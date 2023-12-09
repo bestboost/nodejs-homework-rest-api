@@ -4,7 +4,7 @@ import {
   isValidId,
   isEmptyBody,
   authenticate,
-  upload,
+  // upload,
 } from "../../middlewares/index.js";
 import validateBody from "../../decorators/validaterBody.js";
 import { addSchema, contactFavoriteSchema } from "../../models/Contact.js";
@@ -19,7 +19,7 @@ contactRouter.get("/:id", isValidId, ctrl.getById);
 
 contactRouter.post(
   "/",
-  upload.single("avatar"),
+  // upload.single("avatar"),
   ctrl.addContact,
   validateBody(addSchema)
 );

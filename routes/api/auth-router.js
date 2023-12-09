@@ -1,6 +1,6 @@
 import express from "express";
 import authController from "../../controllers/auth-controller.js";
-import { isEmptyBody, authenticate } from "../../middlewares/index.js";
+import { isEmptyBody, authenticate, upload } from "../../middlewares/index.js";
 import validateBody from "../../decorators/validaterBody.js";
 import { userSignupSchema, userSigninSchema } from "../../models/User.js";
 
@@ -24,6 +24,11 @@ authRouter.get("/users/current", authenticate, authController.getCurrent);
 
 authRouter.post("/users/logout", authenticate, authController.logout);
 
-authRouter.patch("/users/avatars", authenticate, authController.avatar);
+authRouter.patch(
+  "/users/avatars",
+  upload.single("avatar"),
+  authenticate,
+  authController.avatar
+);
 
 export default authRouter;

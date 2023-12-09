@@ -1,13 +1,17 @@
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
+import fs from "fs/promises";
+import path from "path";
 import gravatar from "gravatar";
 import User from "../models/User.js";
 import { HttpError } from "../helpers/HttpError.js";
 import ctrlWrapper from "../decorators/ctrlWrapper.js";
+import jimp from "jimp";
 
 dotenv.config();
 const { JWT_SECRET } = process.env;
+const avatarsPath = path.resolve("public", "avatars");
 
 const register = async (req, res) => {
   const { email, password } = req.body;
@@ -29,7 +33,6 @@ const register = async (req, res) => {
     user: {
       email: newUser.email,
       subscription: newUser.subscription,
-      avatarURL: newUser.avatarURL,
     },
   });
 };
@@ -87,6 +90,20 @@ const avatar = async (req, res) => {
   if (!user) {
     throw HttpError(401, "Not authorized");
   }
+
+  const { path: oldPath, filename } = req.file;
+  const newPath = path.join(avatarsPath, filename);
+  const image = await jimp.read(
+    path.format({
+      root: "tmp",
+      base: `/${filename}`,
+      ext: "ignored",
+    })
+  );
+  image.resize(250, 250);
+  await image.writeAsync(newPath);
+  await fs.unlink(oldPath);
+
   res.status(200).json({ avatarURL: user.avatarURL });
 };
 
