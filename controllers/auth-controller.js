@@ -10,7 +10,7 @@ import ctrlWrapper from "../decorators/ctrlWrapper.js";
 import jimp from "jimp";
 
 dotenv.config();
-const { JWT_SECRET } = process.env;
+const { JWT_SECRET, API_KEYS_TOKEN } = process.env;
 const avatarsPath = path.resolve("public", "avatars");
 
 const register = async (req, res) => {
@@ -107,10 +107,16 @@ const avatar = async (req, res) => {
   res.status(200).json({ avatarURL: user.avatarURL });
 };
 
+const verify = async (req, res) => {
+  const { verificationToken } = req.user;
+  console.log("verify  verificationToken:", verificationToken);
+};
+
 export default {
   register: ctrlWrapper(register),
   login: ctrlWrapper(login),
   getCurrent: ctrlWrapper(getCurrent),
   logout: ctrlWrapper(logout),
   avatar: ctrlWrapper(avatar),
+  verify: ctrlWrapper(verify),
 };
