@@ -10,7 +10,7 @@ import ctrlWrapper from "../decorators/ctrlWrapper.js";
 import jimp from "jimp";
 
 dotenv.config();
-const { JWT_SECRET, API_KEYS_TOKEN } = process.env;
+const { JWT_SECRET } = process.env;
 const avatarsPath = path.resolve("public", "avatars");
 
 const register = async (req, res) => {
