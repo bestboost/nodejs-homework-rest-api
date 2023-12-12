@@ -5,12 +5,13 @@ import fs from "fs/promises";
 import path from "path";
 import gravatar from "gravatar";
 import User from "../models/User.js";
-import { HttpError } from "../helpers/HttpError.js";
+import { HttpError, sendEmail } from "../helpers/index.js";
 import ctrlWrapper from "../decorators/ctrlWrapper.js";
 import jimp from "jimp";
+import { nanoid } from "nanoid";
 
 dotenv.config();
-const { JWT_SECRET } = process.env;
+const { JWT_SECRET, BASE_URL } = process.env;
 const avatarsPath = path.resolve("public", "avatars");
 
 const register = async (req, res) => {
@@ -22,12 +23,20 @@ const register = async (req, res) => {
 
   const hashPassword = await bcrypt.hash(password, 10);
   const avatarURL = gravatar.url(email);
+  const verificationToken = nanoid();
 
   const newUser = await User.create({
     ...req.body,
     password: hashPassword,
     avatarURL,
+    verificationToken,
   });
+  const verifyEmail = {
+    to: email,
+    subject: "Verify email",
+    text: "Please, verify email",
+    html: `<a target="_blank" href="${BASE_URL}/auth/verify/${verificationToken}">Click verify email</a>`,
+  };
 
   res.status(201).json({
     user: {

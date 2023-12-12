@@ -1,7 +1,7 @@
 // import fs from "fs/promises";
 // import path from "path";
 import { Contact } from "../models/Contact.js";
-import { HttpError } from "../helpers/HttpError.js";
+import { HttpError } from "../helpers/index.js";
 import ctrlWrapper from "../decorators/ctrlWrapper.js";
 
 // const avatarsPath = path.resolve("public", "avatars");
