@@ -31,11 +31,8 @@ authRouter.patch(
   authController.avatar
 );
 
-// створити ендпоінт GET[/users/verify /:verificationToken]
-// (# verification - request), де по параметру verificationToken
-// ми будемо шукати користувача в моделі User
 authRouter.get(
-  "users/verify/:verificationToken",
+  "/users/verify/verificationToken",
   authenticate,
   authController.verify
 );

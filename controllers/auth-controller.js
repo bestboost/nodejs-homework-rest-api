@@ -118,7 +118,13 @@ const avatar = async (req, res) => {
 
 const verify = async (req, res) => {
   const { verificationToken } = req.user;
-  console.log("verify  verificationToken:", verificationToken);
+
+  if (!verificationToken) {
+    throw HttpError(404, "User not found");
+  }
+  res
+    .status(200, "Verification successful")
+    .json({ verificationToken: null, verify: true });
 };
 
 export default {
