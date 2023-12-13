@@ -31,11 +31,12 @@ const register = async (req, res) => {
     avatarURL,
     verificationToken,
   });
+
   const verifyEmail = {
     to: email,
     subject: "Verify email",
     text: "Please, verify email",
-    html: `<a target="_blank" href="${BASE_URL}/auth/verify/${verificationToken}">Click verify email</a>`,
+    html: `<a target="_blank" href="${BASE_URL}/users/verify/${verificationToken}">Click verify email</a>`,
   };
   await sendEmail(verifyEmail);
 
@@ -47,12 +48,33 @@ const register = async (req, res) => {
   });
 };
 
+const verify = async (req, res) => {
+  const { verificationToken } = req.params;
+  console.log("verify  verificationToken :", verificationToken);
+  const user = await User.findOne({ verificationToken });
+  console.log("verify  user :", user);
+
+  if (!user) {
+    throw HttpError(404, "AAAA!!! User not found");
+  }
+
+  await User.findByIdAndUpdate(user._id, {
+    verify: true,
+  });
+
+  res.json({ message: "Verification successful" });
+};
+
 const login = async (req, res) => {
   const { email, password } = req.body;
 
   const user = await User.findOne({ email });
   if (!user) {
     throw HttpError(401, "Email or password is wrong");
+  }
+
+  if (!user.verify) {
+    throw HttpError(404, "User not found");
   }
 
   const passwordCompare = await bcrypt.compare(password, user.password);
@@ -117,22 +139,11 @@ const avatar = async (req, res) => {
   res.status(200).json({ avatarURL: user.avatarURL });
 };
 
-const verify = async (req, res) => {
-  const { verificationToken } = req.user;
-
-  if (!verificationToken) {
-    throw HttpError(404, "User not found");
-  }
-  res
-    .status(200, "Verification successful")
-    .json({ verificationToken: null, verify: true });
-};
-
 export default {
   register: ctrlWrapper(register),
+  verify: ctrlWrapper(verify),
   login: ctrlWrapper(login),
   getCurrent: ctrlWrapper(getCurrent),
   logout: ctrlWrapper(logout),
   avatar: ctrlWrapper(avatar),
-  verify: ctrlWrapper(verify),
 };

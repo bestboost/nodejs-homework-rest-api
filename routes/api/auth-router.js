@@ -13,6 +13,8 @@ authRouter.post(
   authController.register
 );
 
+authRouter.get("/users/verify/:verificationToken", authController.verify);
+
 authRouter.post(
   "/users/login",
   isEmptyBody,
@@ -29,12 +31,6 @@ authRouter.patch(
   upload.single("avatar"),
   authenticate,
   authController.avatar
-);
-
-authRouter.get(
-  "/users/verify/verificationToken",
-  authenticate,
-  authController.verify
 );
 
 export default authRouter;
