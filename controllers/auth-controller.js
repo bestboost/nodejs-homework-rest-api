@@ -58,8 +58,9 @@ const verify = async (req, res) => {
     throw HttpError(404, "AAAA!!! User not found");
   }
 
-  await User.findByIdAndUpdate(user._id, {
+  await User.updateMany({
     verify: true,
+    verificationToken: null,
   });
 
   res.json({ message: "Verification successful" });
