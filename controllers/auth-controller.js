@@ -50,20 +50,41 @@ const register = async (req, res) => {
 
 const verify = async (req, res) => {
   const { verificationToken } = req.params;
-  console.log("verify  verificationToken :", verificationToken);
   const user = await User.findOne({ verificationToken });
-  console.log("verify  user :", user);
 
   if (!user) {
-    throw HttpError(404, "AAAA!!! User not found");
+    throw HttpError(404, "User not found");
   }
 
   await User.updateMany({
     verify: true,
-    verificationToken: null,
+    // verificationToken: null,
   });
 
   res.json({ message: "Verification successful" });
+};
+
+const resendVerify = async (req, res) => {
+  const { email } = req.body;
+  const user = await User.findOne({ email });
+  if (!user) {
+    throw HttpError(400, "missing required field email");
+  }
+  if (user.verify) {
+    throw HttpError(400, "Verification has already been passed");
+  }
+
+  const verifyEmail = {
+    to: email,
+    subject: "Verify email",
+    text: "Please, verify email",
+    html: `<a target="_blank" href="${BASE_URL}/users/verify/${user.verificationToken}">Click verify email</a>`,
+  };
+  await sendEmail(verifyEmail);
+
+  res.json({
+    message: "Verification email sent",
+  });
 };
 
 const login = async (req, res) => {
@@ -143,6 +164,7 @@ const avatar = async (req, res) => {
 export default {
   register: ctrlWrapper(register),
   verify: ctrlWrapper(verify),
+  resendVerify: ctrlWrapper(resendVerify),
   login: ctrlWrapper(login),
   getCurrent: ctrlWrapper(getCurrent),
   logout: ctrlWrapper(logout),
