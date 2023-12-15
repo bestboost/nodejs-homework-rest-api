@@ -58,7 +58,7 @@ const verify = async (req, res) => {
 
   await User.updateMany({
     verify: true,
-    // verificationToken: null,
+    verificationToken: null,
   });
 
   res.json({ message: "Verification successful" });
